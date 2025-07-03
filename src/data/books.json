@@ -1,1 +1,10 @@
-[]
+[
+  {
+    "id": "d29039d9-3c1f-41b7-b39f-d5ccf59948ca",
+    "title": "Book Title",
+    "author": "Author Name",
+    "genre": "Fiction",
+    "publishedYear": 2024,
+    "userId": "04fa9a15-c54b-465f-8de6-9a529b62919f"
+  }
+]

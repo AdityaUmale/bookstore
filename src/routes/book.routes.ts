@@ -6,7 +6,7 @@ const router = Router();
 
 router.post("/create", authenticate, (req, res, next) => {
   createBook(req, res).catch(next);
-}); // ✅ Protect the route
+}); 
 
 router.get("/books", authenticate, (req, res, next) => {
   getBooks(req, res).catch(next);

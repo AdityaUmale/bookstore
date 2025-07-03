@@ -28,7 +28,7 @@ export const createBook = async (req: AuthRequest, res: Response) => {
       author,
       genre,
       publishedYear,
-      userId: req.user!.id, // 🔥 This line now works
+      userId: req.user!.id, 
     };
 
     books.push(newBook);
@@ -74,6 +74,10 @@ export const updateBook = async (req: AuthRequest, res: Response) => {
         if (!book) {
             return res.status(404).json({ message: "Book not found" });
         }
+       
+        if (book.userId !== req.user!.id) {
+            return res.status(403).json({ message: "Forbidden: You do not own this book" });
+        }
         const { title, author, genre, publishedYear } = req.body;
         if (!title || !author || !genre || !publishedYear) {
             return res.status(400).json({ message: "All fields are required" });
@@ -95,6 +99,10 @@ export const deleteBook = async (req: AuthRequest, res: Response) => {
         const book = books.find((book) => book.id === req.params.id);
         if (!book) {
             return res.status(404).json({ message: "Book not found" });
+        }
+        
+        if (book.userId !== req.user!.id) {
+            return res.status(403).json({ message: "Forbidden: You do not own this book" });
         }
         const filteredBooks = books.filter((book) => book.id !== req.params.id);
         await writeJSON<Book>(BOOKS_FILE, filteredBooks);

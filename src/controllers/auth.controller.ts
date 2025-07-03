@@ -17,24 +17,23 @@ export const register = async (req: Request, res: Response) => {
   try {
     const { name, email, password } = req.body;
 
-    // Validate fields
+  
     if (!name || !email || !password) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    // Read all users
     const users: User[] = await readJSON<User>(USERS_FILE);
 
-    // Check if user already exists
+    
     const existingUser = users.find((user) => user.email === email);
     if (existingUser) {
       return res.status(409).json({ message: "User already exists" });
     }
 
-    // Hash password
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create new user
+
     const newUser: User = {
       id: uuidv4(),
       name,
@@ -42,18 +41,18 @@ export const register = async (req: Request, res: Response) => {
       password: hashedPassword,
     };
 
-    // Save to users.json
+    
     users.push(newUser);
     await writeJSON<User>(USERS_FILE, users);
 
-    // Generate JWT
+    
     const token = jwt.sign(
       { id: newUser.id, email: newUser.email },
       jwtSecret,
       { expiresIn: "1h" }
     );
 
-    // Respond (avoid returning password)
+    
     return res.status(201).json({
       message: "User registered successfully",
       user: {
@@ -83,7 +82,7 @@ export const login = async (req: Request, res: Response) => {
         if (existingUser) {
             const isPasswordValid = await bcrypt.compare(password, existingUser.password);
             if (isPasswordValid) {
-                // Generate JWT
+                
                 const token = jwt.sign(
                   { id: existingUser.id, email: existingUser.email },
                   jwtSecret,
